@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ReactDropzone from 'react-dropzone'
 import { toast } from "sonner"
 import { duplexPair } from 'stream';
+import { Projector } from './projector';
 
 type CustomeDropZoneProps = {
     handleUpload: (files: File) => void;
@@ -54,6 +55,7 @@ export const CustomeDropZone = ({
             {({getRootProps, getInputProps}) => (
                 <div {...getRootProps()} className={`${isHover ? "border-black bg-gray-100/80" : "border-default-gray"} flex justify-center items-center rounded-3xl flex-col cursor-pointer w-full py-6 ${disabled ? "coursor-not-allowed" : ""}`}>
                     <input {...getInputProps()} />
+                    <Projector />
                     <h3 className='text-center mt-5'>
                         Click to select video <br />
                         or <br />
