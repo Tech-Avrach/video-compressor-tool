@@ -52,10 +52,12 @@ export const CustomeDropZone = ({
             onError={onError}
         >
             {({getRootProps, getInputProps}) => (
-                <div {...getRootProps()} className=''>
+                <div {...getRootProps()} className={`${isHover ? "border-black bg-gray-100/80" : "border-default-gray"} flex justify-center items-center rounded-3xl flex-col cursor-pointer w-full py-6 ${disabled ? "coursor-not-allowed" : ""}`}>
                     <input {...getInputProps()} />
-                    <h3>
-                        Click to select video
+                    <h3 className='text-center mt-5'>
+                        Click to select video <br />
+                        or <br />
+                        Drag and drop
                     </h3>
                 </div>
                     
