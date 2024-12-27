@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CustomeDropZone } from './coustome-dropzone'
 import { acceptedVideoFiles } from '@/utils/formats'
-import { FIleActions } from '@/utils/types'
+import { FIleActions, QualityType, VideoFormats, VideoInputSettings } from '@/utils/types'
 import VideoDisplay from './video-display'
 import VideoInputDetails from './video-input-details'
+import VideoTrim from './video-trim'
 
 const condenseVideo = () => {
 
   const [videoFile, setVideoFile] = React.useState<FIleActions>();
+  const [videoSettings, setVideoSettings] = useState<VideoInputSettings>({
+    quality: QualityType.High,
+    format: VideoFormats.MP4,
+    customeEndTime: 0,
+    customeStartTime: 0,
+    removeAudio: false,
+    twitterCompressionCommand: false,
+    whatsappCompressionCommand: false
+  });
 
   const handleUpload = (file: File) => {
     console.log(file)
@@ -36,7 +46,12 @@ const condenseVideo = () => {
 
         <div className='flex flex-col gap-4 w-full'>
           {videoFile && <>
-            <VideoInputDetails videoFile={videoFile} onClear={() => {}}></VideoInputDetails>
+            <VideoInputDetails videoFile={videoFile} onClear={() => {}} />
+            <VideoTrim 
+            disabled={true} 
+            onVideoSettingsChange={setVideoSettings}
+            videoSettings={videoSettings}
+            />
           </>}
         </div>
         </motion.div>
