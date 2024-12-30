@@ -4,15 +4,15 @@ import * as SliderPrimitives from "@radix-ui/react-slider";
 import { cn } from "@/lib/utils";
 
 const VideoSlider = React.forwardRef<
-React.ElementRef<typeof SliderPrimitives.Root>,
-React.ComponentPropsWithoutRef<typeof SliderPrimitives.Root>
->(({className, ...props}, ref) => (
-    <SliderPrimitives.Root ref={ref} className={cn(
-        "relative flex w-full touch-none select-none items-center", 
-        className )} {...props}>
-            <SliderPrimitives.Track className="relative h-9 w-full grow overflow-hidden rounded-md">
-                <SliderPrimitives.Range className="absolute h-full bg-gray-300/60" >
-                <svg
+  React.ElementRef<typeof SliderPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof SliderPrimitives.Root>
+>(({ className, ...props }, ref) => (
+  <SliderPrimitives.Root ref={ref} className={cn(
+    "relative flex w-full touch-none select-none items-center",
+    className)} {...props}>
+    <SliderPrimitives.Track className="relative h-9 w-full grow overflow-hidden rounded-md">
+      <SliderPrimitives.Range className="absolute h-full bg-gray-300/60" >
+        <svg
           viewBox="0 0 20000 2000"
           xmlns="http://www.w3.org/2000/svg"
           className="z-10 "
@@ -28,12 +28,12 @@ React.ComponentPropsWithoutRef<typeof SliderPrimitives.Root>
             strokeWidth={10}
           />
         </svg>
-                </SliderPrimitives.Range>
-            </SliderPrimitives.Track>
-            <SliderPrimitives.Thumb className="block h-9 w-[5px] border boredr-transparent rounded-l-2xl bg-black transition-colors focus-visible:outline focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 cursor-pointer" />
-            <SliderPrimitives.Thumb className="block h-9 w-[5px] border boredr-transparent rounded-r-2xl bg-black transition-colors focus-visible:outline focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 cursor-pointer" />
-        </SliderPrimitives.Root>
-    
+      </SliderPrimitives.Range>
+    </SliderPrimitives.Track>
+    <SliderPrimitives.Thumb className="block h-9 w-[5px] border boredr-transparent rounded-l-2xl bg-black transition-colors focus-visible:outline focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 cursor-pointer" />
+    <SliderPrimitives.Thumb className="block h-9 w-[5px] border boredr-transparent rounded-r-2xl bg-black transition-colors focus-visible:outline focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 cursor-pointer" />
+  </SliderPrimitives.Root>
+
 ));
 
 VideoSlider.displayName = SliderPrimitives.Root.displayName;

@@ -6,6 +6,7 @@ import { FIleActions, QualityType, VideoFormats, VideoInputSettings } from '@/ut
 import VideoDisplay from './video-display'
 import VideoInputDetails from './video-input-details'
 import VideoTrim from './video-trim'
+import VideoInputControl from './video-input-control'
 
 const condenseVideo = () => {
 
@@ -34,7 +35,10 @@ const condenseVideo = () => {
 
   return (
     <>
-      <motion.div className='border rounded-3xl col-span-5 flex w-full md:h-full bg-gray-50/35 '>
+      <motion.div 
+        
+        className='border rounded-3xl col-span-5 flex w-full md:h-full bg-gray-50/35 '
+      >
       {videoFile ? (
         <VideoDisplay videoUrl={URL.createObjectURL(videoFile.file)} />
       ) : (
@@ -48,11 +52,12 @@ const condenseVideo = () => {
           {videoFile && <>
             <VideoInputDetails videoFile={videoFile} onClear={() => {}} />
             <VideoTrim 
-            disabled={true} 
+            disabled={false} 
             onVideoSettingsChange={setVideoSettings}
             videoSettings={videoSettings}
             />
           </>}
+          <VideoInputControl disable={false} onVideoSettingsChange={setVideoSettings} videoSettings={videoSettings}/>
         </div>
         </motion.div>
       </AnimatePresence>
