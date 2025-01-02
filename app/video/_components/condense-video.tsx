@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CustomeDropZone } from './coustome-dropzone'
 import { acceptedVideoFiles } from '@/utils/formats'
@@ -8,6 +8,8 @@ import VideoInputDetails from './video-input-details'
 import VideoTrim from './video-trim'
 import VideoInputControl from './video-input-control'
 import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { toBlobURL } from '@ffmpeg/util';
+import { toast } from 'sonner'
 const condenseVideo = () => {
 
   const [videoFile, setVideoFile] = React.useState<FIleActions>();
@@ -42,6 +44,59 @@ const condenseVideo = () => {
   const ffmpegRef = useRef(new FFmpeg());
 
   const disabledDuringCompression = status === "condensing";
+
+  const load = async () => {
+    const ffmpeg = ffmpegRef.current;
+    await ffmpeg.load({
+      coreURL: await toBlobURL(
+        `http://localhost:3000/download/ffmpeg-core.js`,
+        "text/javascript"
+      ),
+      wasmURL: await toBlobURL(
+        `http://localhost:3000/download/ffmpeg-core.wasm`,
+        "application/wasm"
+      ),
+    });
+  };
+
+  // const load = async () => {
+  //   const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.4/dist/umd';
+  //   const ffmpeg = ffmpegRef.current;
+    
+  //   try {
+  //     await ffmpeg.load({
+  //       coreURL: await toBlobURL(
+  //         `${baseURL}/ffmpeg-core.js`,
+  //         'text/javascript'
+  //       ),
+  //       wasmURL: await toBlobURL(
+  //         `${baseURL}/ffmpeg-core.wasm`,
+  //         'application/wasm'
+  //       ),
+  //     });
+  //     // setLoaded(true);
+  //   } catch (error) {
+  //     console.error('Error loading FFmpeg:', error);
+  //     toast.error('Failed to load FFmpeg');
+  //   }
+  // };
+
+
+  const loadWithToast = () => {
+    toast.promise(load, {
+      loading: "Downloading necessary packages from FFmpeg for offline use.",
+      success: () => {
+        return "All necessary file downloaded";
+      },
+      error: (err) => {
+        console.log(err);
+        return "Failed to download necessary files";
+      },
+    });
+  };
+
+  useEffect(() => loadWithToast(), []);
+
 
   return (
     <>
@@ -84,7 +139,9 @@ const condenseVideo = () => {
             className='bg-gray-100 border border-gray-200 rounded-2xl p-3 h-fit'
           >
             {(status === "notStarted" || status === "converted") && (
-              <button onClick={() => {}} type="button" className='bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-zinc-700 via-zinc-950 to-zinc-950 rounded-lg text-white relative px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition ease-out duration-500 focus:ring-zinc-950 flex-shrink-0'>
+              <button 
+              onClick={() => {}} type="button" 
+              className='bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-zinc-700 via-zinc-950 to-zinc-950 rounded-lg text-white relative px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition ease-out duration-500 focus:ring-zinc-950 flex-shrink-0'>
                 Condense
               </button>
             )}
