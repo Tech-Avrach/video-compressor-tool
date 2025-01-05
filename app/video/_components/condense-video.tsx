@@ -15,7 +15,7 @@ const condenseVideo = () => {
   const [videoFile, setVideoFile] = React.useState<FIleActions>();
   const [progress, setProgress] = useState<number>(0);
   const [time, setTime] = useState<{
-    startTime?: number;
+    startTime?: Date;
     elapsedSeconds?: number;
   }>({ elapsedSeconds: 0 });
   const [status, setStatus] = useState<"notStarted" | "converted" | "condensing">("notStarted");
@@ -96,6 +96,22 @@ const condenseVideo = () => {
   };
 
   useEffect(() => loadWithToast(), []);
+
+  const condense = async() => {
+    if (!videoFile) return;
+
+    try {
+      setTime({...time, startTime: new Date()});
+      setStatus("condensing");
+      ffmpegRef.current.on("progress", ({progress: completion, time}) => {
+        const percentage = completion * 100;
+        setProgress(percentage);
+      });
+      ffmpegRef.current.on("log", ({ message }) => {
+        console.log(message);
+      })
+    }catch {}
+  }
 
 
   return (
