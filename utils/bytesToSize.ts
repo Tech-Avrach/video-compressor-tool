@@ -15,3 +15,28 @@ export const bytesToSize = (bytes: number): string => {
     // const size = (bytes / Math.pow(factor, i)).toFixed(2);
     // return `${size} ${sizes[i]}`
 };
+
+export const calculateBlobSize = (blob?: Blob): string => {
+    const units = ["Bytes", "KB", "MB", "GB", "TB"];
+
+    let size = blob?.size || 0;
+    let unitIndex = 0;
+
+    while (size >= 1024 && unitIndex < units.length - 1) {
+        size /= 1024;
+        unitIndex++;
+    }
+
+    return `${size.toFixed(2)} ${units[unitIndex]}`;
+}
+
+export const reduceSize = (bytes: number, blob?: Blob): { sizeRedcued: string, percentage: string } => {
+    const blobSizeInBytes = blob?.size || 0;
+    const adjustedSizeInBytes = Math.max(0, bytes - blobSizeInBytes);
+    const percentageReduction = ((adjustedSizeInBytes / bytes) * 100).toFixed(2);
+
+    return {
+        sizeRedcued: bytesToSize(adjustedSizeInBytes),
+        percentage: `${percentageReduction}%`,
+    };
+}

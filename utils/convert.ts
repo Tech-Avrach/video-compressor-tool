@@ -1,16 +1,21 @@
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { FIleActions, VideoInputSettings } from "./types";
 import { fetchFile } from "@ffmpeg/util";
-import { customeVideoCompressionCommand, twitterCompressionCommand, whatsappStatusCompressionCOmmand } from "./ffmpegCommands";
+import { customeVideoCompressionCommand, twitterCompressionCommand, whatsappStatusCompressionCommand } from "./ffmpegCommands";
 
 export function getFileExtension(fileName: string) {
     const regex = /(?:\.([^.]+))?$/;
     const match = regex.exec(fileName);
     if(match && match[1]) {
-        return match[1];
+        return match[1].toLowerCase();
     }
-
     return "";
+}
+
+function generateUniqueOutputName(inputName: string, format: string): string {
+    const timestamp = new Date().getTime();
+    const baseName = removeFileExtension(inputName);
+    return `${baseName}_condensed_${timestamp}.${format}`;
 }
 
 function removeFileExtension(fileName: string) {
@@ -26,23 +31,45 @@ export default async function convertFile(
     actionfile: FIleActions,
     videoSettings: VideoInputSettings,
 ): Promise<any> {
-    const { file, fileName, fileType } = actionfile;
-    const output = removeFileExtension(fileName) + "." + videoSettings.format;
-
-    ffmpeg.writeFile(fileName, await fetchFile(file));
-    const command = videoSettings.twitterCompressionCommand 
-    ? twitterCompressionCommand(fileName, output) 
-    : videoSettings.whatsappCompressionCommand 
-    ? whatsappStatusCompressionCOmmand(fileName, output) 
-    : customeVideoCompressionCommand(fileName, output, videoSettings);
-
-    console.log(command.join(" "));
-    await ffmpeg.exec(command);
-    const data = await ffmpeg.readFile(output);
-    const blob = new Blob([data], { type: fileType.split("/")[0] });
-    const url = URL.createObjectURL(blob);
-    return { url, output, outputBlob: blob };
-} 
+    try {
+        const { file, fileName, fileType } = actionfile;
+        
+        // Generate unique output filename
+        const output = generateUniqueOutputName(fileName, videoSettings.format);
+        
+        // Write input file
+        await ffmpeg.writeFile(fileName, await fetchFile(file));
+        
+        // Determine command based on settings
+        let command: string[];
+        if (videoSettings.twitterCompressionCommand) {
+            command = twitterCompressionCommand(fileName, output, videoSettings);
+        } else if (videoSettings.whatsappCompressionCommand) {
+            command = whatsappStatusCompressionCommand(fileName, output, videoSettings);
+        } else {
+            command = customeVideoCompressionCommand(fileName, output, videoSettings);
+        }
+        
+        console.log("FFmpeg command:", command.join(" "));
+        
+        // Execute conversion
+        await ffmpeg.exec(command);
+        
+        // Read and create output blob
+        const data = await ffmpeg.readFile(output);
+        const blob = new Blob([data], { type: `video/${videoSettings.format}` });
+        const url = URL.createObjectURL(blob);
+        
+        // Clean up input file
+        await ffmpeg.deleteFile(fileName);
+        await ffmpeg.deleteFile(output);
+        
+        return { url, output, outputBlob: blob };
+    } catch (error) {
+        console.error("Conversion error:", error);
+        throw error;
+    }
+}
 
 export const formatTime = (seconds: number) : string => {
     seconds = Math.round(seconds);
