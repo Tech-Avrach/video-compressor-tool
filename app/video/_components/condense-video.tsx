@@ -11,6 +11,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL } from '@ffmpeg/util';
 import { toast } from 'sonner'
 import convertFile from '@/utils/convert'
+import VideoCondenseProgress from './video-condense-progress'
 const condenseVideo = () => {
 
   const [videoFile, setVideoFile] = React.useState<FIleActions>();
@@ -171,6 +172,9 @@ const condenseVideo = () => {
             transition={{type: "tween"}}
             className='bg-gray-100 border border-gray-200 rounded-2xl p-3 h-fit'
           >
+            {status === "condensing" && (
+              <VideoCondenseProgress progress={progress} seconds={time.elapsedSeconds || 0} />
+            )}
             {(status === "notStarted" || status === "converted") && (
               <button 
               onClick={condense} type="button" 
