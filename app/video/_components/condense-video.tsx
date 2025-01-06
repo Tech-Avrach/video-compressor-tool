@@ -73,6 +73,9 @@ const CondenseVideo = () => {
   const FFmpegCoreURL = process.env.NEXT_PUBLIC_FFMPEG_CORE_URL 
   const FFmpegWasmURL = process.env.NEXT_PUBLIC_FFMPEG_WASM_URL 
 
+  console.log('FFmpegCoreURL', FFmpegCoreURL)
+  console.log('FFmpegWasmURL', FFmpegWasmURL)
+
   const load = async () => {
     const ffmpeg = ffmpegRef.current;
     await ffmpeg.load({
