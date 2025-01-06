@@ -70,15 +70,18 @@ const CondenseVideo = () => {
 
   const disableDuringCompression = status === "condensing";
 
+  const FFmpegCoreURL = process.env.NEXT_PUBLIC_FFMPEG_CORE_URL 
+  const FFmpegWasmURL = process.env.NEXT_PUBLIC_FFMPEG_WASM_URL 
+
   const load = async () => {
     const ffmpeg = ffmpegRef.current;
     await ffmpeg.load({
       coreURL: await toBlobURL(
-        `http://localhost:3000/download/ffmpeg-core.js`,
+      `${FFmpegCoreURL}`,
         "text/javascript"
       ),
       wasmURL: await toBlobURL(
-        `http://localhost:3000/download/ffmpeg-core.wasm`,
+        `${FFmpegWasmURL}`,
         "application/wasm"
       ),
     });

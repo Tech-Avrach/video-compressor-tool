@@ -10,7 +10,11 @@ const VideoSlider = React.forwardRef<
   <SliderPrimitives.Root ref={ref} className={cn(
     "relative flex w-full touch-none select-none items-center",
     className)} {...props}>
-    <SliderPrimitives.Track className="relative h-9 w-full grow overflow-hidden rounded-md">
+    <SliderPrimitives.Track
+      className={cn(
+        "relative h-9 w-full grow overflow-hidden rounded-md"
+      )}
+    >
       <SliderPrimitives.Range className="absolute h-full bg-gray-300/60" >
         <svg
           viewBox="0 0 20000 2000"

@@ -65,4 +65,11 @@
   }
 }
 
+/* globals.css */
+.slider-track {
+  background-image: url('/trim.svg');
+  background-size: cover;
+  background-position: center;
+}
+
 
