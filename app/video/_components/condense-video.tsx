@@ -80,11 +80,11 @@ const CondenseVideo = () => {
     const ffmpeg = ffmpegRef.current;
     await ffmpeg.load({
       coreURL: await toBlobURL(
-      `${FFmpegCoreURL}`,
+      `/download/ffmpeg-core.js`,
         "text/javascript"
       ),
       wasmURL: await toBlobURL(
-        `${FFmpegWasmURL}`,
+        `/download/ffmpeg-core.wasm`,
         "application/wasm"
       ),
     });
